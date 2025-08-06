@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function registerUser() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            if (username === "" || password === "") {
+                alert("Please enter both username and password.");
+                return false;
+            }
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters.");
+                return false;
+            }
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+            alert("Registration successful! Proceed to login.");
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+    <center>
+        <h2>Register</h2>
+        <form onsubmit="return registerUser();" action="homepage.html">
+            <label>Username:</label>
+            <input type="text" id="username" title="Enter your username" placeholder="Enter your username"><br><br>
+            <label>Password:</label>
+            <input type="password" id="password" title="Enter your password" placeholder="Enter your password"><br><br>
+            <input type="submit" value="Register">
+        </form>
+    </center>
+</body>
+
+</html>
