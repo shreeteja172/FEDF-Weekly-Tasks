@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation with JS DOM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border 0.3s;
+    }
+    input:focus {
+      border-color: #007BFF;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+    .valid {
+      border-color: green !important;
+    }
+    .invalid {
+      border-color: red !important;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007BFF;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <form id="myForm" novalidate>
+    <h2>Registration Form</h2>
+    
+    <div class="form-group">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" required>
+      <div class="error" id="fullnameError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+      <div class="error" id="emailError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" required>
+      <div class="error" id="passwordError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" pattern="[0-9]{10}" required>
+      <div class="error" id="phoneError"></div>
+    </div>
+
+    <button type="submit">Submit</button>
+    <div class="success" id="successMessage"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const fullname = document.getElementById("fullname");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const phone = document.getElementById("phone");
+
+    const fullnameError = document.getElementById("fullnameError");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
+    const phoneError = document.getElementById("phoneError");
+    const successMessage = document.getElementById("successMessage");
+
+    // Email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Password regex (min 6 chars, one number, one special char)
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$/;
+    // Phone regex (10 digits only)
+    const phoneRegex = /^[0-9]{10}$/;
+
+    function validateFullname() {
+      if (fullname.value.trim() === "") {
+        fullnameError.textContent = "Full Name is required";
+        fullname.classList.add("invalid");
+        fullname.classList.remove("valid");
+        return false;
+      }
+      fullnameError.textContent = "";
+      fullname.classList.add("valid");
+      fullname.classList.remove("invalid");
+      return true;
+    }
+
+    function validateEmail() {
+      if (!emailRegex.test(email.value)) {
+        emailError.textContent = "Invalid email format";
+        email.classList.add("invalid");
+        email.classList.remove("valid");
+        return false;
+      }
+      emailError.textContent = "";
+      email.classList.add("valid");
+      email.classList.remove("invalid");
+      return true;
+    }
+
+    function validatePassword() {
+      if (!passwordRegex.test(password.value)) {
+        passwordError.textContent = "Password must be 6+ chars, include number & special char";
+        password.classList.add("invalid");
+        password.classList.remove("valid");
+        return false;
+      }
+      passwordError.textContent = "";
+      password.classList.add("valid");
+      password.classList.remove("invalid");
+      return true;
+    }
+
+    function validatePhone() {
+      if (!phoneRegex.test(phone.value)) {
+        phoneError.textContent = "Phone must be 10 digits";
+        phone.classList.add("invalid");
+        phone.classList.remove("valid");
+        return false;
+      }
+      phoneError.textContent = "";
+      phone.classList.add("valid");
+      phone.classList.remove("invalid");
+      return true;
+    }
+
+    // Add event listeners
+    fullname.addEventListener("input", validateFullname);
+    email.addEventListener("input", validateEmail);
+    password.addEventListener("input", validatePassword);
+    phone.addEventListener("input", validatePhone);
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault(); // prevent form submission
+
+      let isValid = validateFullname() & validateEmail() & validatePassword() & validatePhone();
+
+      if (isValid) {
+        successMessage.textContent = "Form submitted successfully!";
+        form.reset();
+        fullname.classList.remove("valid");
+        email.classList.remove("valid");
+        password.classList.remove("valid");
+        phone.classList.remove("valid");
+      } else {
+        successMessage.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>
